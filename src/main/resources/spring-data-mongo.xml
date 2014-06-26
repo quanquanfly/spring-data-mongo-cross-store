@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/data/mongo
+        http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
+
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+	</bean>
+
+	<mongo:mongo host="127.0.0.1" port="27017" />
+	<mongo:db-factory dbname="spring-data" />
+	<mongo:repositories base-package="br.com.spring.data.mongo.repository" mongo-template-ref="mongoTemplate" />
+
+	<!-- Mongo cross-store aspect config -->
+	<bean
+		class="org.springframework.data.mongodb.crossstore.MongoDocumentBacking"
+		factory-method="aspectOf">
+		<property name="changeSetPersister" ref="mongoChangeSetPersister" />
+	</bean>
+
+	<bean id="mongoChangeSetPersister"
+		class="org.springframework.data.mongodb.crossstore.MongoChangeSetPersister">
+		<property name="mongoTemplate" ref="mongoTemplate" />
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+</beans>

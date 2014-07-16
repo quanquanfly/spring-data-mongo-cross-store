@@ -45,7 +45,10 @@ public class UserDetailsController {
 		
 		user.setUserDetails(userDetails);
 		
+		//Salva no MySql e no Mongo
 		userRepository.save(user);
-		//userDetailsRepository.save(userDetails);
+		
+		//Salva so Mongo na tabela UserDetails
+		userDetailsRepository.save(userDetails);
 	}
 }
